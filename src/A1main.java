@@ -1,13 +1,13 @@
 /********************Starter Code
- * 
+ *
  * This class contains some examples on how to handle the required inputs and outputs 
  * and other debugging options
- * 
+ *
  * @author at258
- * 
+ *
  * run with 
  * java A1main <Algo> <ConfID>
- * 
+ *
  */
 
 
@@ -16,8 +16,8 @@ public class A1main {
 	public static void main(String[] args) {
 		//Example: java A1main BFS JCONF03
 
-		/* 
-		 * 
+		/*
+		 *
 		 * Retrieve input and configuration
 		 * and run search algorithm
 		 *
@@ -26,8 +26,8 @@ public class A1main {
 
 		Conf conf = Conf.valueOf(args[1]);
 
-		
-		 //Uncomment here for debugging only 
+
+		 //Uncomment here for debugging only
 
 		/*
 		System.out.println("Configuration:"+args[1]);
@@ -39,7 +39,7 @@ public class A1main {
 		System.out.println();
 		*/
 
-		//run your search algorithm 
+		//run your search algorithm
 		runSearch(args[0],conf.getMap(),conf.getS(),conf.getG());
 
 		/*
@@ -49,75 +49,82 @@ public class A1main {
 
 
 		/*
-		 * 1) Print the Frontier at each step before polling 
+		 * 1) Print the Frontier at each step before polling
 		 */
-
-		boolean uninformed=true;
-		String frontier_string="";
-
-		if(uninformed) {
-
-			//starting point (1,1), 
-			//insert node in the frontier, then print the frontier:
-			frontier_string="[(0,0)]";
-
-
-			System.out.println(frontier_string);
-
-			//extract (0,0)
-			//insert successors in the frontier (0,1),(1,0) , then print the frontier,  and repeat for all steps until a path is found or not 
-			frontier_string="[(0,1),(1,0)]\n"
-					+ "[(1,0),(0,2)]\n"
-					+ "[(0,2),(1,1)]\n"
-					+ "[(1,1),(1,2)]\n"
-					+ "[(1,2),(2,1)]\n"
-					+ "[(2,1)]\n"
-					+ "[(2,2),(2,0)]";
-			System.out.println(frontier_string);
-
-
-		}else {
-			//for informed searches the nodes in the frontier must also include the f-cost 
-			//for example 
-			frontier_string="[(0,0):4.0]\n"
-					+ "[(0,1):3.0,(1,0):3.0]\n"
-					+ "...";
-			System.out.println(frontier_string);
-
-		}
-
-		/*
-		 * 2) The final three lines must be the path, path cost, and number of nodes visited/explored, in this order
-		 */
-
-		boolean path_found=true;
-		String path_string="(0,0)(1,0)(1,1)(2,1)(2,2)";
-		double path_cost=4;
-		int n_explored=8;
-
-		if(path_found) {
-			System.out.println(path_string);
-			System.out.println(path_cost);
-		}else {
-			System.out.println("fail");
-		}
-
-		System.out.println(n_explored);
+//
+//		boolean uninformed=true;
+//		String frontier_string="";
+//
+//		if(uninformed) {
+//
+//			//starting point (1,1),
+//			//insert node in the frontier, then print the frontier:
+//			frontier_string="[(0,0)]";
+//
+//
+//			System.out.println(frontier_string);
+//
+//			//extract (0,0)
+//			//insert successors in the frontier (0,1),(1,0) , then print the frontier,  and repeat for all steps until a path is found or not
+//			frontier_string="[(0,1),(1,0)]\n"
+//					+ "[(1,0),(0,2)]\n"
+//					+ "[(0,2),(1,1)]\n"
+//					+ "[(1,1),(1,2)]\n"
+//					+ "[(1,2),(2,1)]\n"
+//					+ "[(2,1)]\n"
+//					+ "[(2,2),(2,0)]";
+//			System.out.println(frontier_string);
+//
+//
+//		}else {
+//			//for informed searches the nodes in the frontier must also include the f-cost
+//			//for example
+//			frontier_string="[(0,0):4.0]\n"
+//					+ "[(0,1):3.0,(1,0):3.0]\n"
+//					+ "...";
+//			System.out.println(frontier_string);
+//
+//		}
+//
+//		/*
+//		 * 2) The final three lines must be the path, path cost, and number of nodes visited/explored, in this order
+//		 */
+//
+//		boolean path_found=true;
+//		String path_string="(0,0)(1,0)(1,1)(2,1)(2,2)";
+//		double path_cost=4;
+//		int n_explored=8;
+//
+//		if(path_found) {
+//			System.out.println(path_string);
+//			System.out.println(path_cost);
+//		}else {
+//			System.out.println("fail");
+//		}
+//
+//		System.out.println(n_explored);
 
 	}
 
 	private static void runSearch(String algo, Map map, Coord start, Coord goal) {
+		BasicAgent agent = new BasicAgent(map,start,goal);
+        BaseStrategy strategy= new BreadthFirstStrategy();
 		switch(algo) {
 		case "BFS": //run BFS
+            strategy = new BreadthFirstStrategy();
 			break;
 		case "DFS": //run DFS
-			break;  
+            strategy = new DepthFirstStrategy();
+			break;
 		case "BestF": //run BestF
-			break;
+            strategy = new BestFirstStrategy();
+            break;
 		case "AStar": //run AStar
-			break;
+            strategy = new AStarStrategy();
+            break;
 		}
-
+        agent.setSearchStrategy(strategy);
+        agent.traverse();
 	}
 
 
@@ -141,7 +148,7 @@ public class A1main {
 		}
 		System.out.println();
 
-		//print rows 
+		//print rows
 		for(int r=0;r<rows;r++) {
 			boolean right;
 			System.out.print(r+"|");
