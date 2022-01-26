@@ -1,4 +1,4 @@
-
+package core;
 
 /********************Starter Code
  * 
@@ -8,7 +8,7 @@
  * 
  * 
  * To iterate over all configurations for evaluation you might want to use
- * for(Conf conf:Conf.values()) {
+ * for(core.Conf conf:core.Conf.values()) {
  *  //do something with conf
  *}
  */

@@ -1,3 +1,5 @@
+package core;
+
 /********************Starter Code
  * 
  * This represents the coordinate data structure (row, column)

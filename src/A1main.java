@@ -1,3 +1,13 @@
+import core.Conf;
+import core.Coord;
+import core.Map;
+import strategy.SearchStrategy;
+import strategy.basic.BasicStrategy;
+import strategy.basic.BreadthFirstStrategy;
+import strategy.basic.DepthFirstStrategy;
+import strategy.intermediate.AStarStrategy;
+import strategy.intermediate.BestFirstStrategy;
+
 /********************Starter Code
  *
  * This class contains some examples on how to handle the required inputs and outputs 
@@ -31,7 +41,7 @@ public class A1main {
 
 		/*
 		System.out.println("Configuration:"+args[1]);
-		System.out.println("Map:");
+		System.out.println("core.Map:");
 		printMap(conf.getMap(), conf.getS(), conf.getG());
 		System.out.println("Departure port: Start (r_s,c_s): "+conf.getS());
 		System.out.println("Destination port: Goal (r_g,c_g): "+conf.getG());
@@ -107,8 +117,8 @@ public class A1main {
 	}
 
 	private static void runSearch(String algo, Map map, Coord start, Coord goal) {
-		BasicAgent agent = new BasicAgent(map,start,goal);
-        BaseStrategy strategy= new BreadthFirstStrategy();
+		Agent agent = new Agent(map,start,goal);
+        SearchStrategy strategy= new BreadthFirstStrategy();
 		switch(algo) {
 		case "BFS": //run BFS
             strategy = new BreadthFirstStrategy();
