@@ -1,11 +1,13 @@
 package agent;
 
-import core.Node;
 import core.Coord;
+import core.Node;
 import strategy.SearchStrategy;
 import strategy.basic.BreadthFirstStrategy;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BidirectionalAgent extends Agent {
@@ -24,35 +26,20 @@ public class BidirectionalAgent extends Agent {
     @Override
     public void traverse() {
         if (strategy instanceof BreadthFirstStrategy) {
-            if (verbose) {
-                // print starter information
-                System.out.println("Departure port: " + this.start + ", Destination port: " + this.goal);
-                System.out.println("Search algorithm: [BIDIRECTIONAL]" + this.strategy.name());
-                System.out.println();
-            }
-            // create forward agent going from start to goal
+            // create forward agent going from start to goal and create backward agent going from goal to start
             Agent forwardAgent = new Agent(map, start, goal, strategy);
-            ArrayDeque<Node> forwardFrontier = new ArrayDeque<>();
-            ArrayList<Node> forwardVisited = new ArrayList<>();
-            forwardFrontier.add(new Node(start, null, 0));
-
-            // create backward agent going from goal to start
             Agent backwardAgent = new Agent(map, goal, start, strategy);
-            ArrayDeque<Node> backwardFrontier = new ArrayDeque<>();
-            ArrayList<Node> backwardVisited = new ArrayList<>();
-            backwardFrontier.add(new Node(goal, null, 0));
-
             // run bidirectional steps
             int count = 0;
             Node proposedNode = Node.FAILURE;
-            while (!forwardFrontier.isEmpty() && !backwardFrontier.isEmpty()) {
+            while (!forwardAgent.getFrontier().isEmpty() && !backwardAgent.getFrontier().isEmpty()) {
                 count++;
 //                System.out.println(getCoordsFromNodes(forwardVisited));
                 // perform forward step for both back ward and forward bfs
                 System.out.print("[Forward] ");
-                Node forwardOptimalNode = forwardAgent.step(forwardFrontier, forwardVisited);
+                Node forwardOptimalNode = forwardAgent.step();
                 System.out.print("[Backward] ");
-                Node backwardOptimalNode = backwardAgent.step(backwardFrontier, backwardVisited);
+                Node backwardOptimalNode = backwardAgent.step();
                 if (forwardOptimalNode != null) {
                     proposedNode = forwardOptimalNode;
                     break;
@@ -61,7 +48,7 @@ public class BidirectionalAgent extends Agent {
                     break;
                 } else {
                     // check if both agents have visited the same node
-                    Node optimalNode = extractIntersectingPath(forwardVisited, backwardVisited);
+                    Node optimalNode = extractIntersectingPath(forwardAgent.getExplored(), backwardAgent.getExplored());
                     if (optimalNode != null) {
                         proposedNode = optimalNode;
                         break;

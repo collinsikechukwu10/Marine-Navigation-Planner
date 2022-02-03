@@ -12,7 +12,7 @@ public class MapGenerator {
     private static final int MAX_MAP_SIZE = 50;
     private static final int MIN_MAP_SIZE = 3;
 
-    private static final int retryLimit = 4;
+    private static final int RETRY_LIMIT = 4;
 
     public static class Problem {
         public int[][] map;
@@ -75,7 +75,7 @@ public class MapGenerator {
     }
 
     private void generateRandomLand(int[][] map, Coord start, Coord goal) {
-        generateRandomLand(map, start, goal, 4);
+        generateRandomLand(map, start, goal, RETRY_LIMIT);
     }
 
     private void generateRandomLand(int[][] map, Coord start, Coord goal, int retries) {

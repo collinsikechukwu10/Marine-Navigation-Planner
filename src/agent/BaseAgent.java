@@ -1,14 +1,19 @@
 package agent;
 
-import core.Node;
 import core.Coord;
+import core.Node;
 import strategy.SearchStrategy;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 
 public abstract class BaseAgent {
     protected final Coord start;
     protected final Coord goal;
     protected final int[][] map;
     protected final SearchStrategy strategy;
+    protected ArrayDeque<Node> frontier = new ArrayDeque<>();
+    protected ArrayList<Node> explored = new ArrayList<>();
     protected int steps;
     protected Node proposedNode;
     protected boolean verbose;
@@ -60,6 +65,22 @@ public abstract class BaseAgent {
      */
     public void setUseAdvancedFeatures(boolean useAdvancedFeatures) {
         this.useAdvancedFeatures = useAdvancedFeatures;
+    }
+
+    public ArrayDeque<Node> getFrontier() {
+        return frontier;
+    }
+
+    public void setFrontier(ArrayDeque<Node> frontier) {
+        this.frontier = frontier;
+    }
+
+    public ArrayList<Node> getExplored() {
+        return explored;
+    }
+
+    public void setExplored(ArrayList<Node> explored) {
+        this.explored = explored;
     }
 
     public void logSearchResult(Node node, int steps) {

@@ -1,8 +1,9 @@
 package eval;
 
 import agent.Agent;
-import core.Node;
+import core.Conf;
 import core.Coord;
+import core.Node;
 import strategy.SearchStrategy;
 import strategy.basic.BreadthFirstStrategy;
 import strategy.basic.DepthFirstStrategy;
@@ -10,6 +11,7 @@ import strategy.intermediate.AStarStrategy;
 import strategy.intermediate.BestFirstStrategy;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SearchStrategyTester {
 
@@ -33,13 +35,23 @@ public class SearchStrategyTester {
         public String toString() {
             int mapLength = this.map.length;
             int mapwidth = this.map[0].length;
-            return "(" + mapLength + "," + mapwidth + "), " + start + "," + goal + "," + steps;// + ",'" + proposedNode.getPath() + "'";
+            return "(" + mapLength + "," + mapwidth + "), " + start + "," + goal + "," + steps;
         }
     }
 
     public static void main(String[] args) {
         String searchAlgorithm = args[0];
         run(resolveSearchStrategy(searchAlgorithm));
+    }
+
+    public void testProvidedMaps(){
+        for (Conf conf:Conf.values()){
+
+        }
+    }
+
+    private List<SearchStrategy> getAllImplementedStrategies(){
+        return null;
     }
 
     public static void run(SearchStrategy strategy) {

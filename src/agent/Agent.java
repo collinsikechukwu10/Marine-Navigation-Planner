@@ -1,11 +1,11 @@
 package agent;
 
-import core.BasicAction;
+import core.Action;
 import core.Coord;
 import core.Node;
 import strategy.SearchStrategy;
 
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  * Agent Class.
@@ -24,6 +24,9 @@ import java.util.*;
 public class Agent extends BaseAgent {
     private static final int LAND = 1;
 
+    private Node proposedNode;
+
+
 
     /**
      * Constructor for agent class.
@@ -34,6 +37,7 @@ public class Agent extends BaseAgent {
      */
     public Agent(int[][] map, Coord start, Coord goal, SearchStrategy strategy) {
         super(map, start, goal, strategy);
+
     }
 
 
@@ -41,23 +45,13 @@ public class Agent extends BaseAgent {
      * Traverse the map provided from the departure/start point to the destination/end point.
      */
     public void traverse() {
-
-//        if (verbose) {
-//            // print starter information
-//            System.out.println("Departure port: " + this.start + ", Destination port: " + this.goal);
-//            System.out.println("Search algorithm: " + this.strategy.name());
-//            System.out.println();
-//        }
-        // initialize frontier and extendedList, and add the start point to the frontier
-        ArrayDeque<Node> frontier = new ArrayDeque<>();
         frontier.add(new Node(start, null, 0));
-        ArrayList<Node> explored = new ArrayList<>();
         int count = 0;
         Node proposedNode = Node.FAILURE;
 
         while (!frontier.isEmpty()) {
             count++;
-            Node optimalNode = step(frontier, explored);
+            Node optimalNode = step();
             if (optimalNode != null) {
                 proposedNode = optimalNode;
                 break;
@@ -70,7 +64,7 @@ public class Agent extends BaseAgent {
         logSearchResult(proposedNode, count);
     }
 
-    public Node step(ArrayDeque<Node> frontier, ArrayList<Node> explored) {
+    public Node step() {
         strategy.logFrontier(frontier);
         Node currentNode = frontier.pollFirst();
         if (strategy.isPathToGoal(currentNode, goal)) {
@@ -103,8 +97,7 @@ public class Agent extends BaseAgent {
         // Triangles pointing upwards only exists at points where r+c is even
         // Actions are arranged in order of priority
         ArrayList<Coord> validNewStates = new ArrayList<>();
-        boolean upwardsFacingTriangle = (state.getR() + state.getC()) % 2 == 0;
-        BasicAction.getAllowedActions(upwardsFacingTriangle, useAdvancedFeatures).forEach(ac -> {
+        Action.getAllowedActions(state, useAdvancedFeatures).forEach(ac -> {
             Coord newState = ac.move(state);
             if (isValidState(newState)) {
                 validNewStates.add(newState);
@@ -112,4 +105,6 @@ public class Agent extends BaseAgent {
         });
         return validNewStates;
     }
+
+
 }

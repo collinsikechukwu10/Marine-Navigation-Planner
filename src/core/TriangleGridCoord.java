@@ -23,7 +23,7 @@ public class TriangleGridCoord {
         return c;
     }
 
-    public static TriangleGridCoord convertFrom(Coord coord) {
+    public static TriangleGridCoord convertFromCoord(Coord coord) {
         int dir = (coord.getR() + coord.getC()) % 2 == 0 ? 0 : 1;
         int row = coord.getR();
         int col = coord.getC();
