@@ -1,7 +1,7 @@
 package strategy.intermediate;
 
 import core.Coord;
-import core.Path;
+import core.Node;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -10,22 +10,21 @@ import java.util.stream.Collectors;
 
 public class AStarStrategy extends IntermediateStrategy {
     @Override
-    public void populateAgenda(Deque<Path> agenda, List<Path> paths, Coord goal) {
+    public void orderFrontier(Deque<Node> agenda, List<Node> nodes, Coord goal) {
         // add paths to agenda
-        agenda.addAll(paths);
-        // sort all paths in agenda, order by descending order of heuristic cost, so the lowest cost gets popped first
+        agenda.addAll(nodes);
+        // sort all paths in frontier by (path_cost + heuristic_cost), so the lowest cost gets popped first
         agenda = agenda.stream().sorted(
-//                (p1, p2) -> (int) Math.ceil(cost(p1.getState(), goal) - heuristicCost(p2.getState(), goal))
+                (p1, p2) -> (int) Math.ceil(totalCost(p1, goal) - totalCost(p2, goal))
         ).collect(Collectors.toCollection(ArrayDeque::new));
     }
 
-    private float cost(Path currentPath, Coord action, Coord goal){
-        return currentPath.getCost() + stepCost() + heuristicCost(action,goal);
+    private float totalCost(Node currentNode, Coord goal) {
+        return currentNode.getCost() + manhattanDistance(currentNode.getState(), goal);
     }
 
-
     @Override
-    public boolean isPathToGoal(Path path, Coord goal) {
-        return path != null && path.getState().equals(goal);
+    public float cost(Node previousNode, Coord newState, Coord goal) {
+        return previousNode.getTotalStepCost() + 1 + manhattanDistance(newState, goal);
     }
 }

@@ -1,0 +1,5 @@
+Things would be must faster if the priorityqueue was used instead of having a list and sorting it all the time
+my explored ended up being a list of nodes instead of a list of coords, which dramatically increased the space complexity.
+
+i did this to keep code comformity with the bidirectional search agent which requires explored to be storad as node as
+when an intersection is found, it is able to trace back the coords explored from that intersection

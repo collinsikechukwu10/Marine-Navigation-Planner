@@ -1,12 +1,17 @@
+import agent.Agent;
+import agent.BidirectionalAgent;
 import core.Conf;
 import core.Coord;
 import core.Map;
 import strategy.SearchStrategy;
-import strategy.basic.BasicStrategy;
 import strategy.basic.BreadthFirstStrategy;
 import strategy.basic.DepthFirstStrategy;
 import strategy.intermediate.AStarStrategy;
 import strategy.intermediate.BestFirstStrategy;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /********************Starter Code
  *
@@ -16,199 +21,127 @@ import strategy.intermediate.BestFirstStrategy;
  * @author at258
  *
  * run with 
- * java A1main <Algo> <ConfID>
- *
+ * java A1main <Algo> <ConfID> ...<additionalParameters>
+ * Example: java A1main BFS JCONF03
  */
-
-
 public class A1main {
 
-	public static void main(String[] args) {
-		//Example: java A1main BFS JCONF03
+    public static void main(String[] args) {
+        /*
+         * Retrieve input and configuration
+         * and run search algorithm
+         */
 
-		/*
-		 *
-		 * Retrieve input and configuration
-		 * and run search algorithm
-		 *
-		 */
+        String searchAlgorithm = args[0];
+        Conf conf = Conf.valueOf(args[1]);
+        // Additional parameters
+        boolean useAdvancedFeatures = false;
+        boolean verbose = false;
 
+        if (args.length > 2) {
+            List<String> additionalParameters = Arrays.stream(args).collect(Collectors.toList());
+            useAdvancedFeatures = additionalParameters.contains("useAdvancedFeatures");
+            verbose = additionalParameters.contains("verbose");
+        }
+        //run your search algorithm
+        runSearch(searchAlgorithm, conf.getMap(), conf.getS(), conf.getG(), useAdvancedFeatures, verbose);
 
-		Conf conf = Conf.valueOf(args[1]);
+    }
 
-
-		 //Uncomment here for debugging only
-
-		/*
-		System.out.println("Configuration:"+args[1]);
-		System.out.println("core.Map:");
-		printMap(conf.getMap(), conf.getS(), conf.getG());
-		System.out.println("Departure port: Start (r_s,c_s): "+conf.getS());
-		System.out.println("Destination port: Goal (r_g,c_g): "+conf.getG());
-		System.out.println("Search algorithm: "+args[0]);
-		System.out.println();
-		*/
-
-		//run your search algorithm
-		runSearch(args[0],conf.getMap(),conf.getS(),conf.getG());
-
-		/*
-		 * The system must print the following information from your search methods
-		 * All code below is for demonstration purposes, and can be removed
-		 */
-
-
-		/*
-		 * 1) Print the Frontier at each step before polling
-		 */
-//
-//		boolean uninformed=true;
-//		String frontier_string="";
-//
-//		if(uninformed) {
-//
-//			//starting point (1,1),
-//			//insert node in the frontier, then print the frontier:
-//			frontier_string="[(0,0)]";
-//
-//
-//			System.out.println(frontier_string);
-//
-//			//extract (0,0)
-//			//insert successors in the frontier (0,1),(1,0) , then print the frontier,  and repeat for all steps until a path is found or not
-//			frontier_string="[(0,1),(1,0)]\n"
-//					+ "[(1,0),(0,2)]\n"
-//					+ "[(0,2),(1,1)]\n"
-//					+ "[(1,1),(1,2)]\n"
-//					+ "[(1,2),(2,1)]\n"
-//					+ "[(2,1)]\n"
-//					+ "[(2,2),(2,0)]";
-//			System.out.println(frontier_string);
-//
-//
-//		}else {
-//			//for informed searches the nodes in the frontier must also include the f-cost
-//			//for example
-//			frontier_string="[(0,0):4.0]\n"
-//					+ "[(0,1):3.0,(1,0):3.0]\n"
-//					+ "...";
-//			System.out.println(frontier_string);
-//
-//		}
-//
-//		/*
-//		 * 2) The final three lines must be the path, path cost, and number of nodes visited/explored, in this order
-//		 */
-//
-//		boolean path_found=true;
-//		String path_string="(0,0)(1,0)(1,1)(2,1)(2,2)";
-//		double path_cost=4;
-//		int n_explored=8;
-//
-//		if(path_found) {
-//			System.out.println(path_string);
-//			System.out.println(path_cost);
-//		}else {
-//			System.out.println("fail");
-//		}
-//
-//		System.out.println(n_explored);
-
-	}
-
-	private static void runSearch(String algo, Map map, Coord start, Coord goal) {
-		Agent agent = new Agent(map,start,goal);
-        SearchStrategy strategy= new BreadthFirstStrategy();
-		switch(algo) {
-		case "BFS": //run BFS
-            strategy = new BreadthFirstStrategy();
-			break;
-		case "DFS": //run DFS
-            strategy = new DepthFirstStrategy();
-			break;
-		case "BestF": //run BestF
-            strategy = new BestFirstStrategy();
-            break;
-		case "AStar": //run AStar
-            strategy = new AStarStrategy();
-            break;
-		}
-        agent.setSearchStrategy(strategy);
+    private static void runSearch(String algo, Map map, Coord start, Coord goal, boolean useAdvancedFeatures, boolean verbose) {
+        SearchStrategy strategy = resolveSearchStrategy(algo);
+        if (strategy == null) {
+            System.out.println("Could not find search strategy associated with the one provided: [" + algo + "]");
+            System.exit(0);
+        }
+        Agent agent;
+        if (algo.equals("BDS")) {
+            agent = new BidirectionalAgent(map.getMap(), start, goal, strategy);
+        } else {
+            agent = new Agent(map.getMap(), start, goal, strategy);
+        }
+        agent.setUseAdvancedFeatures(useAdvancedFeatures);
+        agent.setVerbose(verbose);
         agent.traverse();
-	}
+    }
+
+    private static SearchStrategy resolveSearchStrategy(String searchStrategyString) {
+        SearchStrategy strategy = null;
+        switch (searchStrategyString) {
+            case "BFS": //run BFS
+            case "BDS": // For bidirectional search
+                strategy = new BreadthFirstStrategy();
+                break;
+            case "DFS": //run DFS
+                strategy = new DepthFirstStrategy();
+                break;
+            case "BestF": //run BestF
+                strategy = new BestFirstStrategy();
+                break;
+            case "AStar": //run AStar
+                strategy = new AStarStrategy();
+                break;
+        }
+        return strategy;
+    }
 
 
-	private static void printMap(Map m, Coord init, Coord goal) {
+    private static void printMap(Map m, Coord init, Coord goal) {
 
-		int[][] map=m.getMap();
+        int[][] map = m.getMap();
 
-		System.out.println();
-		int rows=map.length;
-		int columns=map[0].length;
+        System.out.println();
+        int rows = map.length;
+        int columns = map[0].length;
 
-		//top row
-		System.out.print("  ");
-		for(int c=0;c<columns;c++) {
-			System.out.print(" "+c);
-		}
-		System.out.println();
-		System.out.print("  ");
-		for(int c=0;c<columns;c++) {
-			System.out.print(" -");
-		}
-		System.out.println();
+        //top row
+        System.out.print("  ");
+        for (int c = 0; c < columns; c++) {
+            System.out.print(" " + c);
+        }
+        System.out.println();
+        System.out.print("  ");
+        for (int c = 0; c < columns; c++) {
+            System.out.print(" -");
+        }
+        System.out.println();
 
-		//print rows
-		for(int r=0;r<rows;r++) {
-			boolean right;
-			System.out.print(r+"|");
-			if(r%2==0) { //even row, starts right [=starts left & flip right]
-				right=false;
-			}else { //odd row, starts left [=starts right & flip left]
-				right=true;
-			}
-			for(int c=0;c<columns;c++) {
-				System.out.print(flip(right));
-				if(isCoord(init,r,c)) {
-					System.out.print("S");
-				}else {
-					if(isCoord(goal,r,c)) {
-						System.out.print("G");
-					}else {
-						if(map[r][c]==0){
-							System.out.print(".");
-						}else{
-							System.out.print(map[r][c]);
-						}
-					}
-				}
-				right=!right;
-			}
-			System.out.println(flip(right));
-		}
-		System.out.println();
+        //print rows
+        for (int r = 0; r < rows; r++) {
+            boolean right;
+            System.out.print(r + "|");
+            //even row, starts right [=starts left & flip right] while
+            //odd row, starts left [=starts right & flip left]
+            right = r % 2 != 0;
+            for (int c = 0; c < columns; c++) {
+                System.out.print(flip(right));
+                if (isCoord(init, r, c)) {
+                    System.out.print("S");
+                } else if (isCoord(goal, r, c)) {
+                    System.out.print("G");
+                } else if (map[r][c] == 0) {
+                    System.out.print(".");
+                } else {
+                    System.out.print(map[r][c]);
+                }
+                right = !right;
+            }
+            System.out.println(flip(right));
+        }
+        System.out.println();
+    }
 
-
-	}
-
-	private static boolean isCoord(Coord coord, int r, int c) {
-		//check if coordinates are the same as current (r,c)
-		if(coord.getR()==r && coord.getC()==c) {
-			return true;
-		}
-		return false;
-	}
+    private static boolean isCoord(Coord coord, int r, int c) {
+        //check if coordinates are the same as current (r,c)
+        return coord.getR() == r && coord.getC() == c;
+    }
 
 
+    public static String flip(boolean right) {
+        //prints triangle edges.
+        // right return left and vice versa
+        return (right) ? "\\" : "/";
 
-	public static String flip(boolean right) {
-        //prints triangle edges
-		if(right) {
-			return "\\"; //right return left
-		}else {
-			return "/"; //left return right
-		}
-
-	}
+    }
 
 }

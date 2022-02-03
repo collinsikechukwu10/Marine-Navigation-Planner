@@ -3,7 +3,7 @@ package core;
 import java.util.ArrayList;
 import java.util.List;
 
-public enum Action {
+public enum BasicAction {
     MOVE_RIGHT(0, 1),
     MOVE_LEFT(0, -1),
     MOVE_UP(-1, 0),
@@ -16,7 +16,7 @@ public enum Action {
     private final int rowMove;
     private final int colMove;
 
-    Action(int rowMove, int colMove) {
+    BasicAction(int rowMove, int colMove) {
         this.rowMove = rowMove;
         this.colMove = colMove;
     }
@@ -25,8 +25,8 @@ public enum Action {
         return new Coord(currentState.getR() + rowMove, currentState.getC() + colMove);
     }
 
-    public static ArrayList<Action> getAllowedActions(boolean upwardsFacingTriangle, boolean useAdditionalMoves) {
-        ArrayList<Action> moves;
+    public static ArrayList<BasicAction> getAllowedActions(boolean upwardsFacingTriangle, boolean useAdditionalMoves) {
+        ArrayList<BasicAction> moves;
         if (upwardsFacingTriangle) {
             // upwards facing triangle
             if (useAdditionalMoves) {

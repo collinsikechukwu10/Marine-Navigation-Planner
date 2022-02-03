@@ -8,7 +8,7 @@ package core;
  * 
  * 
  * To iterate over all configurations for evaluation you might want to use
- * for(core.Conf conf:core.Conf.values()) {
+ * for(Conf conf:Conf.values()) {
  *  //do something with conf
  *}
  */

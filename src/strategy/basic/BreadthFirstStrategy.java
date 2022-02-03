@@ -1,7 +1,7 @@
 package strategy.basic;
 
 import core.Coord;
-import core.Path;
+import core.Node;
 
 import java.util.Deque;
 import java.util.List;
@@ -9,10 +9,10 @@ import java.util.List;
 public class BreadthFirstStrategy extends BasicStrategy {
 
     @Override
-    public void populateAgenda(Deque<Path> agenda, List<Path> paths, Coord goal) {
+    public void orderFrontier(Deque<Node> agenda, List<Node> nodes, Coord goal) {
         // ordering of paths is currently at decreasing levels of action priority as defined by the tie-breaking strategy
-        for (int i = 0; i < paths.size(); i++) {
-            agenda.addLast(paths.get(i));
+        for (int i = 0; i < nodes.size(); i++) {
+            agenda.addLast(nodes.get(i));
         }
     }
 
