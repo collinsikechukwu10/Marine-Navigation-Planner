@@ -131,15 +131,26 @@ public class A1main {
         System.out.println();
     }
 
+    /**
+     * Check if coordinates are the same as current (r,c)
+     *
+     * @param coord coordinate
+     * @param r     row
+     * @param c     column
+     * @return True if coordinates are the same
+     */
     private static boolean isCoord(Coord coord, int r, int c) {
-        //check if coordinates are the same as current (r,c)
         return coord.getR() == r && coord.getC() == c;
     }
 
-
+    /**
+     * Prints triangle edges. right return left and vice versa
+     *
+     * @param right is forward slash
+     * @return flipped slash
+     */
     public static String flip(boolean right) {
-        //prints triangle edges.
-        // right return left and vice versa
+        //
         return (right) ? "\\" : "/";
 
     }

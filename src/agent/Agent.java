@@ -21,11 +21,10 @@ import java.util.ArrayList;
  * @version 1.0.0
  * @since 30-01-2022
  */
-public class Agent extends BaseAgent {
+public class Agent extends GenericAgent {
     private static final int LAND = 1;
 
     private Node proposedNode;
-
 
 
     /**
@@ -37,7 +36,6 @@ public class Agent extends BaseAgent {
      */
     public Agent(int[][] map, Coord start, Coord goal, SearchStrategy strategy) {
         super(map, start, goal, strategy);
-
     }
 
 
@@ -64,6 +62,11 @@ public class Agent extends BaseAgent {
         logSearchResult(proposedNode, count);
     }
 
+    /**
+     * Runs a search step.
+     *
+     * @return proposed node if needed
+     */
     public Node step() {
         strategy.logFrontier(frontier);
         Node currentNode = frontier.pollFirst();
@@ -81,7 +84,7 @@ public class Agent extends BaseAgent {
      * Check if state is valid.
      *
      * @param state coordinate in the map
-     * @return
+     * @return True if state is valid
      */
     public boolean isValidState(Coord state) {
         int r = state.getR();
@@ -93,6 +96,12 @@ public class Agent extends BaseAgent {
         return !isOutOfBounds && !(this.map[r][c] == LAND);
     }
 
+    /**
+     * Gets the valid states that an agent can move to from a current state.
+     *
+     * @param state current state
+     * @return valid states
+     */
     private ArrayList<Coord> checkAvailableActions(Coord state) {
         // Triangles pointing upwards only exists at points where r+c is even
         // Actions are arranged in order of priority

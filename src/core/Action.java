@@ -60,20 +60,11 @@ public enum Action {
     }
 
     /**
-     * Apply an action to a state
-     *
-     * @param currentState state to apply an action
-     * @return new state
-     */
-    public Coord move(Coord currentState) {
-        return new Coord(currentState.getR() + rowMove, currentState.getC() + colMove);
-    }
-
-    /**
      * Gets all valid actions for a state.
+     * These actions are based on a triangle gri system.
      *
      * @param state              current state
-     * @param useAdditionalMoves option to allow advacned moves
+     * @param useAdditionalMoves option to allow advanced moves
      * @return valid moves that a state can use to transition into another state
      */
     public static ArrayList<Action> getAllowedActions(Coord state, boolean useAdditionalMoves) {
@@ -95,6 +86,16 @@ public enum Action {
             }
         }
         return moves;
+    }
+
+    /**
+     * Apply an action to a state
+     *
+     * @param currentState state to apply an action
+     * @return new state
+     */
+    public Coord move(Coord currentState) {
+        return new Coord(currentState.getR() + rowMove, currentState.getC() + colMove);
     }
 
 }

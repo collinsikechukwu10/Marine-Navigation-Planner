@@ -10,10 +10,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Bidirectional Agent Class.
+ * This class is used for bidirectional search.
+ *
+ * @author 210032207
+ * @version 1.0.0
+ * @since 30-01-2022
+ */
 public class BidirectionalAgent extends Agent {
 
     /**
-     * Constructor for agent class.
+     * Constructor for the bidirectional agent class.
      *
      * @param map   map to traverse
      * @param start departure or start point
@@ -23,6 +31,9 @@ public class BidirectionalAgent extends Agent {
         super(map, start, goal, strategy);
     }
 
+    /**
+     * Traverse the map provided from the departure/start point to the destination/end point.
+     */
     @Override
     public void traverse() {
         if (strategy instanceof BreadthFirstStrategy) {
@@ -34,8 +45,6 @@ public class BidirectionalAgent extends Agent {
             Node proposedNode = Node.FAILURE;
             while (!forwardAgent.getFrontier().isEmpty() && !backwardAgent.getFrontier().isEmpty()) {
                 count++;
-//                System.out.println(getCoordsFromNodes(forwardVisited));
-                // perform forward step for both back ward and forward bfs
                 System.out.print("[Forward] ");
                 Node forwardOptimalNode = forwardAgent.step();
                 System.out.print("[Backward] ");
@@ -65,6 +74,13 @@ public class BidirectionalAgent extends Agent {
         }
     }
 
+    /**
+     * Finds a node that connects intersects two list of nodes.
+     *
+     * @param forwardNodeList  primary node list
+     * @param backwardNodeList secondary node list
+     * @return connecting node
+     */
     public Node extractIntersectingPath(List<Node> forwardNodeList, List<Node> backwardNodeList) {
         List<Coord> forwardCoords = forwardNodeList.stream().map(Node::getState).collect(Collectors.toList());
         List<Coord> backwardCoords = backwardNodeList.stream().map(Node::getState).collect(Collectors.toList());
@@ -72,22 +88,32 @@ public class BidirectionalAgent extends Agent {
         // only get the first coordinate if intersection exists.
         if (forwardCoords.size() > 0) {
             Coord intersection = new ArrayList<>(forwardCoords).get(0);
-            System.out.println("Found intersecting coordinate at " + intersection);
+            System.out.println("Intersecting state at " + intersection);
             Optional<Node> primaryNodeOptional = forwardNodeList.stream().filter(nd -> nd.getState().equals(intersection)).findFirst();
             Optional<Node> backwardNodeOptional = backwardNodeList.stream().filter(nd -> nd.getState().equals(intersection)).findFirst();
             if (primaryNodeOptional.isPresent() && backwardNodeOptional.isPresent()) {
-                Node optimalNode = primaryNodeOptional.get();
-                Node backwardNode = backwardNodeOptional.get();
                 // to prevent combining the same node twice, we read from the parent of the primary node
-                optimalNode = optimalNode.getParent();
-                while (backwardNode != null) {
-                    Coord newState = backwardNode.getState();
-                    optimalNode = new Node(newState, optimalNode, strategy.cost(optimalNode, newState, goal));
-                    backwardNode = backwardNode.getParent();
-                }
-                return optimalNode;
+                return mergeNodes(primaryNodeOptional.get().getParent(), backwardNodeOptional.get());
             }
         }
         return null;
+    }
+
+    /**
+     * Merge two nodes together.
+     *
+     * @param node1 primary node
+     * @param node2 secondary node
+     * @return merged node
+     */
+    private Node mergeNodes(Node node1, Node node2) {
+        Node mergedNode = node1;
+        Node b = node2;
+        while (b != null) {
+            Coord newState = b.getState();
+            mergedNode = new Node(newState, mergedNode, strategy.cost(mergedNode, newState, goal));
+            b = b.getParent();
+        }
+        return mergedNode;
     }
 }
