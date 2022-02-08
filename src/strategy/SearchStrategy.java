@@ -63,7 +63,7 @@ public abstract class SearchStrategy {
      * @param state state to find
      * @return True if state exists in the nodes
      */
-    private boolean stateExistsInNodes(List<Node> nodes, Coord state) {
+    public boolean stateExistsInNodes(List<Node> nodes, Coord state) {
         return nodes.stream().map(Node::getState).anyMatch(s -> s.equals(state));
     }
 
