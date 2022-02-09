@@ -58,7 +58,8 @@ public class Agent {
 
 
     /**
-     * Traverse the map provided from the departure/start point to the destination/end point.
+     * This is the main traversal function. It traverses the map provided from
+     * the departure/start point to the destination/end point.
      */
     public void traverse() {
         if (strategy instanceof BidirectionalSearchStrategy) {

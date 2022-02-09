@@ -19,6 +19,7 @@ public class SearchResult {
     private final int[][] map;
     private final SearchStrategy strategy;
     private final Node node;
+    private final String comment;
 
     /**
      * Search Result constructor.
@@ -29,14 +30,16 @@ public class SearchResult {
      * @param steps    number of search steps
      * @param node     node
      * @param strategy search strategy
+     * @param comment  any extra information about a search result
      */
-    public SearchResult(int[][] map, Coord start, Coord goal, int steps, Node node, SearchStrategy strategy) {
+    public SearchResult(int[][] map, Coord start, Coord goal, int steps, Node node, SearchStrategy strategy, String comment) {
         this.map = map;
         this.start = start;
         this.goal = goal;
         this.steps = steps;
         this.node = node;
         this.strategy = strategy;
+        this.comment = comment;
 
     }
 
@@ -60,7 +63,7 @@ public class SearchResult {
      * @return report as a string
      */
     public static String generateReport(List<SearchResult> results) {
-        StringBuilder report = new StringBuilder("strategy,mapSize,start goal distance,steps,cost").append("\n");
+        StringBuilder report = new StringBuilder("strategy,mapSize,start goal distance,steps,cost,comments").append("\n");
         results.forEach(res -> report.append(res.toString()).append("\n"));
         return report.toString();
     }
@@ -70,7 +73,7 @@ public class SearchResult {
      */
     @Override
     public String toString() {
-        return this.strategy.name() + "," + map.length + "," + euclideanDistance(start,goal) +  "," +
-                steps + "," + node.getCost();
+        return this.strategy.name() + "," + map.length + "," + euclideanDistance(start, goal) + "," +
+                steps + "," + node.getCost() + "," + comment;
     }
 }

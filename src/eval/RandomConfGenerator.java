@@ -3,6 +3,7 @@ package eval;
 import core.Coord;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -150,6 +151,11 @@ public class RandomConfGenerator {
          */
         public Coord getGoal() {
             return goal;
+        }
+
+        @Override
+        public String toString() {
+            return "Problem{mapsize=" + map.length + ", start=" + start + ", goal=" + goal + '}';
         }
     }
 }
