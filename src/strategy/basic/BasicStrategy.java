@@ -38,7 +38,7 @@ public abstract class BasicStrategy extends SearchStrategy {
      * @return cost of moving to the new state
      */
     @Override
-    public float cost(Node previousNode, Coord newState, Coord goal) {
-        return previousNode.getTotalStepCost() + 1;
+    public float fCost(Node previousNode, Coord newState, Coord goal) {
+        return 1;
     }
 }

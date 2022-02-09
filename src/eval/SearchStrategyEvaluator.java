@@ -9,6 +9,7 @@ import strategy.basic.BreadthFirstStrategy;
 import strategy.basic.DepthFirstStrategy;
 import strategy.intermediate.AStarStrategy;
 import strategy.intermediate.BestFirstStrategy;
+import strategy.intermediate.BidirectionalSearchStrategy;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -30,11 +31,12 @@ public class SearchStrategyEvaluator {
             new BreadthFirstStrategy(),
             new DepthFirstStrategy(),
             new BestFirstStrategy(),
-            new AStarStrategy());
+            new AStarStrategy(),
+            new BidirectionalSearchStrategy());
 
 
     /**
-     * Evaluates all the strategies based on the provided configurations and a large number of random configurations
+     * Evaluates all the strategies based on the provided configurations
      */
     public void evaluateProvidedConf() {
         // evaluate all provided configurations
@@ -54,7 +56,9 @@ public class SearchStrategyEvaluator {
 
 
     }
-
+    /**
+     * Evaluates all the strategies based on the randomly generated configurations
+     */
     public void evaluateRandomConf(){
         // evaluate a large number of randomly generated maps.
         List<SearchResult> result = new ArrayList<>();

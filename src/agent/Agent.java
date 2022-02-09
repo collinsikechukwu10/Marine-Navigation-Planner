@@ -98,6 +98,9 @@ public class Agent {
         // create forward agent going from start to goal and create backward agent going from goal to start
         Agent forwardAgent = new Agent(map, start, goal, strategy);
         Agent backwardAgent = new Agent(map, goal, start, strategy);
+        // set initial nodes for the frontier
+        forwardAgent.getFrontier().add(new Node(start, null, 0));
+        backwardAgent.getFrontier().add(new Node(goal, null, 0));
         // run bidirectional steps
         int count = 0;
         Node proposedNode = Node.FAILURE;
@@ -228,7 +231,7 @@ public class Agent {
         Node b = node2;
         while (b != null) {
             Coord newState = b.getState();
-            mergedNode = new Node(newState, mergedNode, strategy.cost(mergedNode, newState, goal));
+            mergedNode = new Node(newState, mergedNode, strategy.fCost(mergedNode, newState, goal));
             b = b.getParent();
         }
         return mergedNode;

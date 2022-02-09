@@ -41,13 +41,26 @@ public class SearchResult {
     }
 
     /**
+     * Calculates euclidean distance between two points
+     *
+     * @param point1 first coordinate
+     * @param point2 second coordinate
+     * @return euclidean distance of two points
+     */
+    private float euclideanDistance(Coord point1, Coord point2) {
+        return (float) Math.sqrt(
+                Math.pow(Math.abs(point1.getR() - point2.getR()), 2) +
+                        Math.pow(Math.abs(point1.getC() - point2.getC()), 2));
+    }
+
+    /**
      * Generates a report from a list of results.
      *
      * @param results list of results
      * @return report as a string
      */
     public static String generateReport(List<SearchResult> results) {
-        StringBuilder report = new StringBuilder(";strategy,mapsize,steps,cost").append("\n");
+        StringBuilder report = new StringBuilder("strategy,mapSize,start goal distance,steps,cost").append("\n");
         results.forEach(res -> report.append(res.toString()).append("\n"));
         return report.toString();
     }
@@ -57,6 +70,7 @@ public class SearchResult {
      */
     @Override
     public String toString() {
-        return this.strategy.name() + "," + map.length + "," + steps + "," + node.getCost();
+        return this.strategy.name() + "," + map.length + "," + euclideanDistance(start,goal) +  "," +
+                steps + "," + node.getCost();
     }
 }

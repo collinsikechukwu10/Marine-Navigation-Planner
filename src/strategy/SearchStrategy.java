@@ -46,7 +46,7 @@ public abstract class SearchStrategy {
     public void expandNode(Deque<Node> frontier, List<Node> explored, Node currentNode, ArrayList<Coord> newStates, Coord goal) {
         List<Node> validNodes = new ArrayList<>();
         for (Coord newState : newStates) {
-            Node node = new Node(newState, currentNode, cost(currentNode, newState, goal));
+            Node node = new Node(newState, currentNode, fCost(currentNode, newState, goal));
             boolean stateExplored = stateExistsInNodes(explored, newState);
             boolean stateInFrontier = stateExistsInNodes(new ArrayList<>(frontier), newState);
             if (!stateExplored && !stateInFrontier) {
@@ -86,7 +86,7 @@ public abstract class SearchStrategy {
      * @param goal         goal of the search problem
      * @return cost of moving to the new state
      */
-    public abstract float cost(Node previousNode, Coord newState, Coord goal);
+    public abstract float fCost(Node previousNode, Coord newState, Coord goal);
 
     /**
      * Gets the class name of the strategy

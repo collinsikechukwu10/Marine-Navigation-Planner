@@ -5,7 +5,9 @@ import core.Node;
 import core.TriangleGridCoord;
 import strategy.SearchStrategy;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -29,6 +31,21 @@ public abstract class IntermediateStrategy extends SearchStrategy {
     public void logFrontier(Deque<Node> frontier) {
         String frontierString = frontier.stream().map(path -> path.getState().toString() + ":" + path.getCost()).collect(Collectors.joining(","));
         System.out.println("[" + frontierString + "]");
+    }
+
+    /**
+     * Appends nodes and orders nodes in a frontier.
+     *
+     * @param frontier search frontier/agenda
+     * @param nodes    new nodes
+     * @param goal     goal of the search problem
+     */
+    @Override
+    public void orderFrontier(Deque<Node> frontier, List<Node> nodes, Coord goal) {
+        // add paths to agenda
+        frontier.addAll(nodes);
+        // sort all paths in frontier by (path_cost + heuristic_cost), so the lowest cost gets popped first
+        frontier = frontier.stream().sorted().collect(Collectors.toCollection(ArrayDeque::new));
     }
 
     /**

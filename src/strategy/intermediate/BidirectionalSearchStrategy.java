@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author 210032207
  * @version 1.0.0
- * @since 30-01-2022
+ * @since 09-02-2022
  */
 public class BidirectionalSearchStrategy extends IntermediateStrategy {
 
@@ -42,7 +42,7 @@ public class BidirectionalSearchStrategy extends IntermediateStrategy {
      * @return cost of moving to the new state
      */
     @Override
-    public float cost(Node previousNode, Coord newState, Coord goal) {
-        return previousNode.getTotalStepCost() + 1;
+    public float fCost(Node previousNode, Coord newState, Coord goal) {
+        return 1;
     }
 }

@@ -88,7 +88,7 @@ public class Node implements Comparable<Node> {
         if (!this.hasNoPath()) {
             this.getPath().forEach(System.out::print);
             System.out.println();
-            System.out.println(this.getCost());
+            System.out.println(this.getTotalStepCost());
         } else {
             System.out.println("fail");
         }
@@ -103,6 +103,11 @@ public class Node implements Comparable<Node> {
         return state == null && parent == null;
     }
 
+    /**
+     * Used for ordering based on cost.
+     * @param node
+     * @return
+     */
     @Override
     public int compareTo(Node node) {
         float diff = cost - node.getCost();
