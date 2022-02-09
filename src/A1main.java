@@ -2,6 +2,7 @@ import agent.Agent;
 import core.Conf;
 import core.Coord;
 import core.Map;
+import eval.SearchStrategyEvaluator;
 import strategy.SearchStrategy;
 import strategy.basic.BreadthFirstStrategy;
 import strategy.basic.DepthFirstStrategy;
@@ -9,9 +10,7 @@ import strategy.intermediate.AStarStrategy;
 import strategy.intermediate.BestFirstStrategy;
 import strategy.intermediate.BidirectionalSearchStrategy;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 /********************Starter Code
  *
@@ -32,32 +31,52 @@ public class A1main {
          * and run search algorithm
          */
 
-        String searchAlgorithm = args[0];
-        Conf conf = Conf.valueOf(args[1]);
-        // Additional parameters
-        boolean useAdvancedFeatures = false;
-        boolean verbose = false;
-
-        if (args.length > 2) {
-            List<String> additionalParameters = Arrays.stream(args).collect(Collectors.toList());
-            useAdvancedFeatures = additionalParameters.contains("useAdvancedFeatures");
-            verbose = additionalParameters.contains("verbose");
+        if (args.length == 1) {
+            if (Objects.equals(args[0], "eval")) {
+                runEvaluator();
+            }
+        } else if (args.length > 1) {
+            String searchAlgorithm = args[0];
+            Conf conf = Conf.valueOf(args[1]);
+            // Additional parameters
+            boolean useAdvancedMoves = false;
+            if (args.length > 2) {
+                useAdvancedMoves = Objects.equals(args[0], "useAdvancedMoves");
+            }
+            //run your search algorithm
+            runSearch(searchAlgorithm, conf.getMap(), conf.getS(), conf.getG(), useAdvancedMoves);
+        }else{
+            System.out.println("Please provide parameters");
+            System.out.println("java A1main <Algo> <ConfID> ...<additionalParameters>");
         }
-        //run your search algorithm
-        runSearch(searchAlgorithm, conf.getMap(), conf.getS(), conf.getG(), useAdvancedFeatures, verbose);
 
     }
 
-    private static void runSearch(String algo, Map map, Coord start, Coord goal, boolean useAdvancedFeatures, boolean verbose) {
+    /**
+     * Run search algorithm
+     * @param algo search algorithm strategy
+     * @param map search problem map
+     * @param start start coordinate
+     * @param goal goal coordinate
+     * @param useAdvancedMoves use advanced moves
+     */
+    private static void runSearch(String algo, Map map, Coord start, Coord goal, boolean useAdvancedMoves) {
         SearchStrategy strategy = searchStrategyFactory(algo);
         if (strategy == null) {
             System.out.println("Could not find search strategy associated with the one provided: [" + algo + "]");
             System.exit(0);
         }
-        Agent agent = agent = new Agent(map.getMap(), start, goal, strategy);
-        agent.setUseAdvancedFeatures(useAdvancedFeatures);
-        agent.setVerbose(verbose);
+        Agent agent = new Agent(map.getMap(), start, goal, strategy);
+        agent.setUseAdvancedMoves(useAdvancedMoves);
         agent.traverse();
+    }
+
+    /**
+     * Run evaluation program
+     */
+    private static void runEvaluator() {
+        SearchStrategyEvaluator evaluator = new SearchStrategyEvaluator();
+        evaluator.evaluateProvidedConf();
     }
 
     /**
@@ -71,6 +90,7 @@ public class A1main {
         switch (searchStrategyString) {
             case "BFS": //run BFS
                 strategy = new BreadthFirstStrategy();
+                break;
             case "BDS": // For bidirectional search
                 strategy = new BidirectionalSearchStrategy();
                 break;

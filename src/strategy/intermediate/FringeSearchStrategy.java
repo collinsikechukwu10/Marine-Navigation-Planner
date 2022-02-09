@@ -4,7 +4,6 @@ import core.Coord;
 import core.Node;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class FringeSearchStrategy extends IntermediateStrategy {
 
@@ -28,7 +27,7 @@ public class FringeSearchStrategy extends IntermediateStrategy {
 
 
     @Override
-    public void expandPath(Deque<Node> frontier, List<Node> explored, Node currentNode, ArrayList<Coord> newStates, Coord goal) {
+    public void expandNode(Deque<Node> frontier, List<Node> explored, Node currentNode, ArrayList<Coord> newStates, Coord goal) {
 
         List<Node> validNodes = new ArrayList<>();
         for (Coord newState : newStates) {

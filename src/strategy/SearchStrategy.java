@@ -26,7 +26,7 @@ public abstract class SearchStrategy {
     public abstract void logFrontier(Deque<Node> frontier);
 
     /**
-     * Appends nodes and orders nodes in a frontier.
+     * Appends and orders nodes in a frontier.
      *
      * @param frontier search frontier/agenda
      * @param nodes    new nodes
@@ -43,7 +43,7 @@ public abstract class SearchStrategy {
      * @param newStates   new states
      * @param goal        goal of the search problem
      */
-    public void expandPath(Deque<Node> frontier, List<Node> explored, Node currentNode, ArrayList<Coord> newStates, Coord goal) {
+    public void expandNode(Deque<Node> frontier, List<Node> explored, Node currentNode, ArrayList<Coord> newStates, Coord goal) {
         List<Node> validNodes = new ArrayList<>();
         for (Coord newState : newStates) {
             Node node = new Node(newState, currentNode, cost(currentNode, newState, goal));

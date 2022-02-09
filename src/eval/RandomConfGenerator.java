@@ -19,6 +19,7 @@ public class RandomConfGenerator {
     private static final float landRatio = (float) 0.1;
     private static final int MAX_MAP_SIZE = 50;
     private static final int MIN_MAP_SIZE = 3;
+    private static final long SEED = 214;
 
     private static final int RETRY_LIMIT = 4;
 
@@ -26,6 +27,7 @@ public class RandomConfGenerator {
      * Random Cong generator constructor
      */
     public RandomConfGenerator() {
+        ThreadLocalRandom.current().setSeed(SEED);
     }
 
     /**

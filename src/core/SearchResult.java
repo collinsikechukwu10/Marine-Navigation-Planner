@@ -47,8 +47,8 @@ public class SearchResult {
      * @return report as a string
      */
     public static String generateReport(List<SearchResult> results) {
-        StringBuilder report = new StringBuilder(";strategy,mapsize,start,goal,steps,cost").append("\\n");
-        results.forEach(res -> report.append(res.toString()).append("\\n"));
+        StringBuilder report = new StringBuilder(";strategy,mapsize,steps,cost").append("\n");
+        results.forEach(res -> report.append(res.toString()).append("\n"));
         return report.toString();
     }
 
@@ -57,6 +57,6 @@ public class SearchResult {
      */
     @Override
     public String toString() {
-        return this.strategy.name() + "," + map.length + "," + start + "," + goal + "," + steps + "," + node.getCost();
+        return this.strategy.name() + "," + map.length + "," + steps + "," + node.getCost();
     }
 }

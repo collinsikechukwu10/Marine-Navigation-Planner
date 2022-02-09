@@ -6,6 +6,7 @@ import core.Node;
 import strategy.SearchStrategy;
 import strategy.intermediate.BidirectionalSearchStrategy;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +26,17 @@ import java.util.stream.Collectors;
  * @version 1.0.0
  * @since 30-01-2022
  */
-public class Agent extends AbstractAgent {
+public class Agent {
+    protected final Coord start;
+    protected final Coord goal;
+    protected final int[][] map;
+    protected final SearchStrategy strategy;
+    protected ArrayDeque<Node> frontier = new ArrayDeque<>();
+    protected ArrayList<Node> explored = new ArrayList<>();
+    protected int steps;
+    protected Node proposedNode;
+    protected boolean useAdvancedMoves;
+
     private static final int LAND = 1;
 
     /**
@@ -36,7 +47,13 @@ public class Agent extends AbstractAgent {
      * @param goal  destination or end point
      */
     public Agent(int[][] map, Coord start, Coord goal, SearchStrategy strategy) {
-        super(map, start, goal, strategy);
+        this.map = map;
+        this.start = start;
+        this.goal = goal;
+        this.strategy = strategy;
+        this.useAdvancedMoves = false;
+        this.steps = 0;
+        this.proposedNode = Node.FAILURE;
     }
 
 
@@ -125,7 +142,7 @@ public class Agent extends AbstractAgent {
         } else {
             explored.add(currentNode);
             ArrayList<Coord> validNewStates = checkAvailableActions(currentNode.getState());
-            strategy.expandPath(frontier, explored, currentNode, validNewStates, goal);
+            strategy.expandNode(frontier, explored, currentNode, validNewStates, goal);
         }
         return null;
     }
@@ -165,7 +182,7 @@ public class Agent extends AbstractAgent {
         // Triangles pointing upwards only exists at points where r+c is even
         // Actions are arranged in order of priority
         ArrayList<Coord> validNewStates = new ArrayList<>();
-        Action.getAllowedActions(state, useAdvancedFeatures).forEach(ac -> {
+        Action.getAllowedActions(state, useAdvancedMoves).forEach(ac -> {
             Coord newState = ac.move(state);
             if (!isOutOfBounds(newState) && !isLand(newState)) {
                 validNewStates.add(newState);
@@ -215,6 +232,73 @@ public class Agent extends AbstractAgent {
             b = b.getParent();
         }
         return mergedNode;
+    }
+
+    /**
+     * @return steps
+     */
+    public int getSteps() {
+        return steps;
+    }
+
+    /**
+     * Sets the steps
+     *
+     * @param steps the steps to set
+     */
+    public void setSteps(int steps) {
+        this.steps = steps;
+    }
+
+    /**
+     * @return proposed node
+     */
+    public Node getProposedNode() {
+        return proposedNode;
+    }
+
+    /**
+     * Sets the proposed node
+     *
+     * @param proposedNode the proposed node to set
+     */
+    public void setProposedNode(Node proposedNode) {
+        this.proposedNode = proposedNode;
+    }
+
+    /**
+     * Option to use/ not use advanced features implemented
+     *
+     * @param useAdvancedMoves option to toggle use of advanced features.
+     */
+    public void setUseAdvancedMoves(boolean useAdvancedMoves) {
+        this.useAdvancedMoves = useAdvancedMoves;
+    }
+
+    /**
+     * @return frontier
+     */
+    public ArrayDeque<Node> getFrontier() {
+        return frontier;
+    }
+
+
+    /**
+     * @return explored nodes
+     */
+    public ArrayList<Node> getExplored() {
+        return explored;
+    }
+
+    /**
+     * Log the path and the steps taken to get to a node.
+     *
+     * @param node  node to get path from
+     * @param steps number of steps taken to get to the node
+     */
+    public void logSearchResult(Node node, int steps) {
+        node.printPath();
+        System.out.println(steps);
     }
 
 }

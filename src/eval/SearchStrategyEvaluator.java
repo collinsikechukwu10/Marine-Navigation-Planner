@@ -26,35 +26,43 @@ import java.util.List;
  * @since 30-01-2022
  */
 public class SearchStrategyEvaluator {
+    private final List<? extends SearchStrategy> searchStrategies = List.of(
+            new BreadthFirstStrategy(),
+            new DepthFirstStrategy(),
+            new BestFirstStrategy(),
+            new AStarStrategy());
 
-
-    public static void main(String[] args) {
-        evaluate();
-    }
 
     /**
      * Evaluates all the strategies based on the provided configurations and a large number of random configurations
      */
-    private static void evaluate() {
+    public void evaluateProvidedConf() {
         // evaluate all provided configurations
-        List<? extends SearchStrategy> searchStrategies = List.of(
-                new BreadthFirstStrategy(),
-                new DepthFirstStrategy(),
-                new BestFirstStrategy(),
-                new AStarStrategy());
         List<SearchResult> result = new ArrayList<>();
         for (Conf conf : Conf.values()) {
             searchStrategies.forEach(strategy -> {
                 result.add(run(conf.getMap().getMap(), conf.getS(), conf.getG(), strategy));
             });
         }
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("eval.csv", false));
+            writer.append(SearchResult.generateReport(result));
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+
+    }
+
+    public void evaluateRandomConf(){
         // evaluate a large number of randomly generated maps.
+        List<SearchResult> result = new ArrayList<>();
         new RandomConfGenerator().generateConfs().forEach(pr -> {
             searchStrategies.forEach(strategy -> result.add(run(pr.getMap(), pr.getStart(), pr.getGoal(), strategy)));
         });
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("eval.csv", true));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("eval.csv", false));
             writer.append(SearchResult.generateReport(result));
             writer.close();
         } catch (IOException e) {
@@ -71,7 +79,7 @@ public class SearchStrategyEvaluator {
      * @param strategy search strategy
      * @return search result
      */
-    public static SearchResult run(int[][] map, Coord start, Coord goal, SearchStrategy strategy) {
+    public  SearchResult run(int[][] map, Coord start, Coord goal, SearchStrategy strategy) {
         Agent agent = new Agent(map, start, goal, strategy);
         agent.traverse();
         return new SearchResult(map, start, goal, agent.getSteps(), agent.getProposedNode(), strategy);
