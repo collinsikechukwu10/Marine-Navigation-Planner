@@ -44,7 +44,7 @@ public class SearchStrategyEvaluator {
         List<SearchResult> result = new ArrayList<>();
         for (Conf conf : Conf.values()) {
             searchStrategies.forEach(strategy -> {
-                result.add(run(conf.getMap(), conf.getS(), conf.getG(), strategy));
+                result.add(run(conf.getMap().getMap(), conf.getS(), conf.getG(), strategy,conf.name()));
             });
         }
         try {
@@ -83,24 +83,12 @@ public class SearchStrategyEvaluator {
      * @param start    start coordinate
      * @param goal     goal coordinate
      * @param strategy search strategy
+     * @param comment comment
      * @return search result
      */
     public SearchResult run(int[][] map, Coord start, Coord goal, SearchStrategy strategy, String comment) {
         Agent agent = new Agent(map, start, goal, strategy);
         agent.traverse();
         return new SearchResult(map, start, goal, agent.getSteps(), agent.getProposedNode(), strategy, comment);
-    }
-
-    /**
-     * Creates an agent to run a strategy and generates a result.
-     *
-     * @param map      problem map
-     * @param start    start coordinate
-     * @param goal     goal coordinate
-     * @param strategy search strategy
-     * @return search result
-     */
-    public SearchResult run(Map map, Coord start, Coord goal, SearchStrategy strategy) {
-        return run(map.getMap(), start, goal, strategy, map.name());
     }
 }

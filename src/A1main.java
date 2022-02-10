@@ -24,40 +24,49 @@ import java.util.Objects;
  * Example: java A1main BFS JCONF03
  */
 public class A1main {
-
+    /**
+     * Entry point for the search algorithm
+     *
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         /*
          * Retrieve input and configuration
          * and run search algorithm
          */
-
-        if (args.length == 1) {
-            if (Objects.equals(args[0], "eval")) {
-                runEvaluator();
+        String searchAlgorithm = args[0];
+        if (Objects.equals(searchAlgorithm, "eval")) {
+            SearchStrategyEvaluator evaluator = new SearchStrategyEvaluator();
+            if (args.length > 1 && Objects.equals(args[1], "randomMap")) {
+                evaluator.evaluateRandomConf();
+            } else {
+                evaluator.evaluateProvidedConf();
             }
-        } else if (args.length > 1) {
-            String searchAlgorithm = args[0];
-            Conf conf = Conf.valueOf(args[1]);
-            // Additional parameters
+            System.exit(0);
+        } else {
             boolean useAdvancedMoves = false;
-            if (args.length > 2) {
-                useAdvancedMoves = Objects.equals(args[0], "useAdvancedMoves");
+            if (args.length > 1) {
+                Conf conf = Conf.valueOf(args[1]);
+                // Additional parameters
+                if (args.length > 2) {
+                    useAdvancedMoves = Objects.equals(args[0], "useAdvancedMoves");
+                }
+                runSearch(searchAlgorithm, conf.getMap(), conf.getS(), conf.getG(), useAdvancedMoves);
+                System.exit(0);
             }
-            //run your search algorithm
-            runSearch(searchAlgorithm, conf.getMap(), conf.getS(), conf.getG(), useAdvancedMoves);
-        }else{
-            System.out.println("Please provide parameters");
-            System.out.println("java A1main <Algo> <ConfID> ...<additionalParameters>");
         }
+        System.out.println("Please provide parameters");
+        System.out.println("java A1main <Algo> <ConfID> ...<additionalParameters>");
 
     }
 
     /**
      * Run search algorithm
-     * @param algo search algorithm strategy
-     * @param map search problem map
-     * @param start start coordinate
-     * @param goal goal coordinate
+     *
+     * @param algo             search algorithm strategy
+     * @param map              search problem map
+     * @param start            start coordinate
+     * @param goal             goal coordinate
      * @param useAdvancedMoves use advanced moves
      */
     private static void runSearch(String algo, Map map, Coord start, Coord goal, boolean useAdvancedMoves) {
@@ -69,14 +78,6 @@ public class A1main {
         Agent agent = new Agent(map.getMap(), start, goal, strategy);
         agent.setUseAdvancedMoves(useAdvancedMoves);
         agent.traverse();
-    }
-
-    /**
-     * Run evaluation program
-     */
-    private static void runEvaluator() {
-        SearchStrategyEvaluator evaluator = new SearchStrategyEvaluator();
-        evaluator.evaluateProvidedConf();
     }
 
     /**

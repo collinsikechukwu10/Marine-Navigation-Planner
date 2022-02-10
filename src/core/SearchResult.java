@@ -74,6 +74,6 @@ public class SearchResult {
     @Override
     public String toString() {
         return this.strategy.name() + "," + map.length + "," + euclideanDistance(start, goal) + "," +
-                steps + "," + node.getCost() + "," + comment;
+                steps + "," + node.getTotalStepCost() + "," + comment;
     }
 }
